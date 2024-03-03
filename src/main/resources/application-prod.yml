@@ -1,0 +1,14 @@
+spring:
+  application:
+    name:user-center
+  # DataSource Config
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://8.134.210.147/user_center
+    username: xin
+    password: xinXIN123
+  session:
+    #失效时间
+    timeout: 86400
+server:
+  address: 0.0.0.0
