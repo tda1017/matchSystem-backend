@@ -1,6 +1,6 @@
-package com.xin.usercenter.mapper;
+package com.xin.matchsystem.mapper;
 
-import com.xin.usercenter.model.domain.User;
+import com.xin.matchsystem.model.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

@@ -1,4 +1,4 @@
-package com.xin.usercenter.model.domain.request;
+package com.xin.matchsystem.model.domain.request;
 
 import lombok.Data;
 

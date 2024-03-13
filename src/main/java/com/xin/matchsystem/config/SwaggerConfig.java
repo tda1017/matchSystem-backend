@@ -1,4 +1,4 @@
-package com.xin.usercenter.config;
+package com.xin.matchsystem.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

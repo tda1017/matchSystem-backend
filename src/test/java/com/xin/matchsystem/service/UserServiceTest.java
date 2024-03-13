@@ -1,9 +1,9 @@
-package com.xin.usercenter.service;
+package com.xin.matchsystem.service;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
-import com.xin.usercenter.model.domain.User;
+import com.xin.matchsystem.model.domain.User;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

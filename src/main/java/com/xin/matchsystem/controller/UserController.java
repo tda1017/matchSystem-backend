@@ -1,22 +1,28 @@
-package com.xin.usercenter.controller;
+package com.xin.matchsystem.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.xin.usercenter.common.BaseResponse;
-import com.xin.usercenter.common.ErrorCode;
-import com.xin.usercenter.common.ResultUtils;
-import com.xin.usercenter.exception.BusinessException;
-import com.xin.usercenter.model.domain.User;
-import com.xin.usercenter.model.domain.request.UserLoginRequest;
-import com.xin.usercenter.model.domain.request.UserRegisterRequest;
-import com.xin.usercenter.service.UserService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xin.matchsystem.common.BaseResponse;
+import com.xin.matchsystem.common.ErrorCode;
+import com.xin.matchsystem.common.ResultUtils;
+import com.xin.matchsystem.exception.BusinessException;
+import com.xin.matchsystem.mapper.UserMapper;
+import com.xin.matchsystem.model.domain.User;
+import com.xin.matchsystem.model.domain.request.UserLoginRequest;
+import com.xin.matchsystem.model.domain.request.UserRegisterRequest;
+import com.xin.matchsystem.service.UserService;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import static com.xin.usercenter.constant.UserConstant.USER_LOGIN_STATE;
+import static com.xin.matchsystem.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * @author: TDawn
@@ -35,11 +41,14 @@ import static com.xin.usercenter.constant.UserConstant.USER_LOGIN_STATE;
 @RestController
 @RequestMapping("user")
 @Slf4j
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private RedisTemplate redisTemplate;
 
 
     @PostMapping("login")
@@ -110,6 +119,7 @@ public class UserController {
         return ResultUtils.success(collect);
     }
 
+
     @PostMapping("delete")
     public BaseResponse<Boolean> deleteUser(@RequestBody long id, HttpServletRequest request) {
         if (id <= 0) {
@@ -148,6 +158,7 @@ public class UserController {
         return ResultUtils.success(userList);
     }
 
+    //todo 补充校验，用户没有更新任何值直接报错
     /**
      * 更新用户信息
      * @param user
@@ -172,13 +183,26 @@ public class UserController {
      * @return List
      */
    @GetMapping ("recommend")
-    public BaseResponse<List<User>> recommendUsers(HttpServletRequest request){
+    public BaseResponse<Page<User>> recommendUsers(long pageSize, long pageNum, HttpServletRequest request){
+       User logininUser = userService.getCurrentUser(request);
+       String redisKey = String.format("xin:user:recommend:%s",logininUser.getId());
+       ValueOperations valueOperations = redisTemplate.opsForValue();
+       //如果有缓存，直接读取
+       Page<User> userPage = (Page<User>) valueOperations.get(redisKey);
+       if (userPage != null){
+           return ResultUtils.success(userPage);
+       }
+       //无缓存，查数据库
        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-       List<User> userList = userService.list(queryWrapper);
-       List<User> list = userList.stream().map(user -> userService.getSafetyUser(user))
-               .collect(Collectors.toList());
-       return ResultUtils.success(list);
-    }
+       userPage = userService.page(new Page<>(pageNum,pageSize),queryWrapper);
+       //写缓存,30s过期
+       try {
+           valueOperations.set(redisKey,userPage,30000, TimeUnit.MILLISECONDS);
+       } catch (Exception e){
+           log.error("redis set key error",e);
+       }
+       return ResultUtils.success(userPage);
+   }
 
 
 }

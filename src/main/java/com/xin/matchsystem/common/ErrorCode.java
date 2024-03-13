@@ -1,6 +1,4 @@
-package com.xin.usercenter.common;
-
-import lombok.Data;
+package com.xin.matchsystem.common;
 
 /**
  * @author: TDA

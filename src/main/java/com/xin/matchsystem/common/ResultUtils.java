@@ -1,4 +1,4 @@
-package com.xin.usercenter.common;
+package com.xin.matchsystem.common;
 
 /**
  * @author: TDA

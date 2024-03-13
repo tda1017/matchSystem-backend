@@ -1,6 +1,6 @@
-package com.xin.usercenter.service;
+package com.xin.matchsystem.service;
 
-import com.xin.usercenter.model.domain.User;
+import com.xin.matchsystem.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;

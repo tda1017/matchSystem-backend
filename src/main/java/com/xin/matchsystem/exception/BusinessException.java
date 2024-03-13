@@ -1,6 +1,6 @@
-package com.xin.usercenter.exception;
+package com.xin.matchsystem.exception;
 
-import com.xin.usercenter.common.ErrorCode;
+import com.xin.matchsystem.common.ErrorCode;
 
 /**
  * @author: TDA

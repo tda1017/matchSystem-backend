@@ -1,8 +1,8 @@
-package com.xin.usercenter.exception;
+package com.xin.matchsystem.exception;
 
-import com.xin.usercenter.common.BaseResponse;
-import com.xin.usercenter.common.ErrorCode;
-import com.xin.usercenter.common.ResultUtils;
+import com.xin.matchsystem.common.BaseResponse;
+import com.xin.matchsystem.common.ErrorCode;
+import com.xin.matchsystem.common.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

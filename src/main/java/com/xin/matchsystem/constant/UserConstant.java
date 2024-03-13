@@ -1,4 +1,4 @@
-package com.xin.usercenter.constant;
+package com.xin.matchsystem.constant;
 
 /**
  * @author: TDawn

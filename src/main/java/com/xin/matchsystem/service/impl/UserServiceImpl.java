@@ -1,15 +1,15 @@
-package com.xin.usercenter.service.impl;
+package com.xin.matchsystem.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.xin.usercenter.common.ErrorCode;
-import com.xin.usercenter.constant.UserConstant;
-import com.xin.usercenter.exception.BusinessException;
-import com.xin.usercenter.service.UserService;
-import com.xin.usercenter.model.domain.User;
-import com.xin.usercenter.mapper.UserMapper;
+import com.xin.matchsystem.common.ErrorCode;
+import com.xin.matchsystem.constant.UserConstant;
+import com.xin.matchsystem.exception.BusinessException;
+import com.xin.matchsystem.service.UserService;
+import com.xin.matchsystem.model.domain.User;
+import com.xin.matchsystem.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.xin.usercenter.constant.UserConstant.USER_LOGIN_STATE;
+import static com.xin.matchsystem.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * @author TDA

@@ -1,4 +1,4 @@
-package com.xin.usercenter.model.domain;
+package com.xin.matchsystem.model.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 
@@ -84,6 +84,11 @@ public class User implements Serializable {
      */
     @TableLogic
     private Integer isDelete;
+
+    /**
+     *
+     */
+    private String profile;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

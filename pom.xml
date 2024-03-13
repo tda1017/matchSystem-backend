@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.xin</groupId>
-    <artifactId>user-center</artifactId>
+    <artifactId>match-system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>user-center</name>
-    <description>user-center</description>
+    <name>match-system</name>
+    <description>match-system</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
