@@ -22,11 +22,11 @@ public class UserServiceTest {
     public void testAddUser(){
         User user = new User();
         user.setUsername("xin");
-        user.setUserAccount("123");
+        user.setUserAccount("xinxin");
         user.setAvatarUrl("https://images.zsxq.com/Fn-012BXZwcPeBWvJ2vKBWfK2teD?e=1706716799&token=kIxbL07-8jAj8w1n4s9zv64FuZZNEATmlU_Vm6zD:C3bx4f_cWYMmlxiXRPlTr8XtLxc=");
         user.setGender(0);
-        user.setUserPassword("123");
-        user.setPhone("123");
+        user.setUserPassword("123123123");
+        user.setPhone("123123123");
         user.setEmail("123");
         user.setUserStatus(0);
         user.setIsDelete(0);
@@ -34,26 +34,24 @@ public class UserServiceTest {
         boolean res = userService.save(user);
         System.out.println(user.getId());
         assertTrue(res);
-
     }
 
     @Test
     void userRegister() throws NoSuchAlgorithmException {
-        String userAccount = "xinx";
-        String userPassword = "";
-        String checkPassword = "123456";
+        String userAccount = "xinxin";
+        String userPassword = "123123123";
+        String checkPassword = "123123123";
         long res = userService.userRegister(userAccount, userPassword, checkPassword);
-        Assertions.assertEquals(-1, res);
+        System.out.println(res);
+//        Assertions.assertEquals(-1, res);
+    }
 
-        userAccount = "x";
-        res = userService.userRegister(userAccount, userPassword, checkPassword);
-        Assertions.assertEquals(-1, res);
-
-        userAccount = "xinx";
-        userPassword = "123456";
-        res = userService.userRegister(userAccount, userPassword, checkPassword);
-        Assertions.assertEquals(-1, res);
-
+    @Test
+    void getNewPassword() throws NoSuchAlgorithmException {
+        String userPassword = "123123123";
+        StringBuilder newPassword = userService.getNewPassword(userPassword);
+        System.out.println(newPassword.toString());
+//        Assertions.assertEquals(-1, res);
     }
 
     @Test

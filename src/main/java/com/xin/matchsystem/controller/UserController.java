@@ -7,14 +7,12 @@ import com.xin.matchsystem.common.BaseResponse;
 import com.xin.matchsystem.common.ErrorCode;
 import com.xin.matchsystem.common.ResultUtils;
 import com.xin.matchsystem.exception.BusinessException;
-import com.xin.matchsystem.mapper.UserMapper;
 import com.xin.matchsystem.model.domain.User;
 import com.xin.matchsystem.model.domain.request.UserLoginRequest;
 import com.xin.matchsystem.model.domain.request.UserRegisterRequest;
 import com.xin.matchsystem.service.UserService;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
@@ -171,7 +169,7 @@ public class UserController {
         if (user == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getCurrentUser(request);
+        User loginUser = userService.getLogininUser(request);
         int result = userService.updateUser(user, loginUser);
         return ResultUtils.success(result);
     }
@@ -184,7 +182,7 @@ public class UserController {
      */
    @GetMapping ("recommend")
     public BaseResponse<Page<User>> recommendUsers(long pageSize, long pageNum, HttpServletRequest request){
-       User logininUser = userService.getCurrentUser(request);
+       User logininUser = userService.getLogininUser(request);
        String redisKey = String.format("xin:user:recommend:%s",logininUser.getId());
        ValueOperations valueOperations = redisTemplate.opsForValue();
        //如果有缓存，直接读取
