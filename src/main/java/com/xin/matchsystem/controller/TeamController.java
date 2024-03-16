@@ -28,7 +28,7 @@ import java.util.List;
  * @description:
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/team")
 //@CrossOrigin(origins = {"http://localhost:3000/"})
 @Slf4j
 public class TeamController {
@@ -42,17 +42,17 @@ public class TeamController {
     @Resource
     private TeamService teamService;
 
-    @PostMapping("/add")
-    public BaseResponse<Long> addTeam(@RequestBody Team team){
-        if (team == null){
-            throw new BusinessException(ErrorCode.NULL_ERROR);
-        }
-        boolean save = teamService.save(team);
-        if (!save){
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"插入失败");
-        }
-        return ResultUtils.success(team.getId());
-    }
+//    @PostMapping("/add")
+//    public BaseResponse<Long> addTeam(@RequestBody Team team){
+//        if (team == null){
+//            throw new BusinessException(ErrorCode.NULL_ERROR);
+//        }
+//        boolean save = teamService.save(team);
+//        if (!save){
+//            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"插入失败");
+//        }
+//        return ResultUtils.success(team.getId());
+//    }
 
     @PostMapping("/add")
     public BaseResponse<Long> addTeam(@RequestBody TeamAddRequest teamAddRequest, HttpServletRequest request){

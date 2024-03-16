@@ -26,7 +26,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .select()
                 //这里一定要标注你控制器的位置
-                .apis(RequestHandlerSelectors.basePackage("com.xin.usercenter.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.xin.matchsystem.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -37,10 +37,10 @@ public class SwaggerConfig {
      */
     private ApiInfo apiInfo(){
         return new ApiInfoBuilder()
-                .title("鱼皮用户中心")
-                .description("鱼皮用户中心文档")
-                .termsOfServiceUrl("https://github.com/liyupi")
-                .contact(new Contact("yupi","https://github.com/liyupi","1212121@qq.com"))
+                .title("匹配系统")
+                .description("http://localhost:8080/api/doc.html文档")
+                .termsOfServiceUrl("https://github.com/tda1017")
+                .contact(new Contact("tda1017","https://github.com/tda1017","1154379178@qq.com"))
                 .version("1.0")
                 .build();
     }
