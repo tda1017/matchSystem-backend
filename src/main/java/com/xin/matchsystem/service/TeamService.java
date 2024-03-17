@@ -3,6 +3,12 @@ package com.xin.matchsystem.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xin.matchsystem.model.domain.Team;
 import com.xin.matchsystem.model.domain.User;
+import com.xin.matchsystem.model.domain.request.TeamJoinRequest;
+import com.xin.matchsystem.model.domain.request.TeamUpdateRequest;
+import com.xin.matchsystem.model.dto.TeamQuery;
+import com.xin.matchsystem.model.vo.TeamUserVO;
+
+import java.util.List;
 
 /**
 * @author TDawn
@@ -17,4 +23,11 @@ public interface TeamService extends IService<Team> {
      * @return
      */
     long addTeam(Team team, User loginUser);
+
+
+    List<TeamUserVO> listTeams(TeamQuery teamQuery, boolean isAdmin);
+
+    boolean updateTeam(TeamUpdateRequest team, User loginUser);
+
+    boolean joinTeam(TeamJoinRequest teamJoinRequest, User logininUser);
 }

@@ -9,6 +9,7 @@ import com.xin.matchsystem.common.ResultUtils;
 import com.xin.matchsystem.exception.BusinessException;
 import com.xin.matchsystem.model.domain.Team;
 import com.xin.matchsystem.model.domain.User;
+import com.xin.matchsystem.model.domain.request.TeamJoinRequest;
 import com.xin.matchsystem.model.dto.TeamQuery;
 import com.xin.matchsystem.request.TeamAddRequest;
 import com.xin.matchsystem.service.TeamService;
@@ -126,6 +127,17 @@ public class TeamController {
         QueryWrapper<Team> queryWrapper = new QueryWrapper<>(team);
         Page<Team> resultPage = teamService.page(page,queryWrapper);
         return ResultUtils.success(resultPage);
+    }
+
+    @PostMapping("/join")
+    public BaseResponse<Boolean> joinTeam(@RequestBody TeamJoinRequest teamJoinRequest, HttpServletRequest request) {
+        if (teamJoinRequest == null) {
+            throw new BusinessException(ErrorCode.NULL_ERROR);
+        }
+        User logininUser = userService.getLogininUser(request);
+        boolean result = teamService.joinTeam(teamJoinRequest, logininUser);
+        return ResultUtils.success(result);
+
     }
 }
 
