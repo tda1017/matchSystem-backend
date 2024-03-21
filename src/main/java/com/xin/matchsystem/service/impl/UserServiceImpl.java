@@ -10,6 +10,7 @@ import com.xin.matchsystem.exception.BusinessException;
 import com.xin.matchsystem.service.UserService;
 import com.xin.matchsystem.model.domain.User;
 import com.xin.matchsystem.mapper.UserMapper;
+import com.xin.matchsystem.utils.AlgorithmUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -100,12 +98,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public User userLogin(String userAccount, String userPassword, HttpServletRequest request) throws NoSuchAlgorithmException {
         //校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
+            System.out.println("isAnyBlank");
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         if (userAccount.length() < 4) {
+            System.out.println("userAccount.length() < 4");
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         if (userPassword.length() < 8) {
+            System.out.println("userPassword.length() < 8");
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
@@ -117,6 +118,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         Matcher matcher = pattern.matcher(userAccount);
         //匹配上的时候返回true,匹配不通过返回false
         if (!matcher.matches()) {
+            System.out.println("账户不能包含特殊字符,匹配不通过");
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
@@ -286,6 +288,58 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         // 3. 触发更新
         return this.baseMapper.updateById(user);
+    }
+
+    /**
+     * 推荐匹配用户
+     * @param num
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public List<User> matchUsers(long num, User loginUser) {
+//        这里我因为电脑内存问题，没有办法像鱼皮电脑那样可以存放100万数据，可以直接运行。所以我选择了运行5万条数据。
+//        不然的话会报 OOM（内存）的问题
+//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.last("limit 50000");
+//        List<User> userList = this.list(queryWrapper);
+//         或者用page分页查询，自己输入或默认数值，但这样匹配就有限制了
+//        List<User> userList = this.page(new Page<>(pageNum,pageSize),queryWrapper);
+//		这里查了所有用户，近100万条
+        List<User> userList = this.list();
+        String tags = loginUser.getTags();
+        Gson gson = new Gson();
+        List<String> tagList = gson.fromJson(tags, new TypeToken<List<String>>() {
+        }.getType());
+        System.out.println(tagList);
+        // 用户列表的下表 => 相似度
+        SortedMap<Integer, Long> indexDistanceMap = new TreeMap<>();
+        for (int i = 0; i <userList.size(); i++) {
+            User user = userList.get(i);
+            String userTags = user.getTags();
+            //无标签的
+            if (StringUtils.isBlank(userTags)){
+                continue;
+            }
+            List<String> userTagList = gson.fromJson(userTags, new TypeToken<List<String>>() {
+            }.getType());
+            //计算分数
+            long distance = AlgorithmUtils.minDistance(tagList.toString(), userTagList.toString());
+            indexDistanceMap.put(i,distance);
+        }
+        //下面这个是打印前num个的id和分数
+        List<User> userListVo = new ArrayList<>();
+        int i = 0;
+        for (Map.Entry<Integer,Long> entry : indexDistanceMap.entrySet()){
+            if (i > num){
+                break;
+            }
+            User user = userList.get(entry.getKey());
+            System.out.println(user.getId() + ":" + entry.getKey() + ":" + entry.getValue());
+            userListVo.add(user);
+            i++;
+        }
+        return userListVo;
     }
 }
 

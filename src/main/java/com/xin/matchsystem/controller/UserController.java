@@ -12,21 +12,19 @@ import com.xin.matchsystem.model.domain.request.UserLoginRequest;
 import com.xin.matchsystem.model.domain.request.UserRegisterRequest;
 import com.xin.matchsystem.service.UserService;
 import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import lombok.extern.slf4j.Slf4j;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import static com.xin.matchsystem.constant.UserConstant.USER_LOGIN_STATE;
 
@@ -180,7 +178,7 @@ public class UserController {
      * @param request
      * @return List
      */
-   @GetMapping ("recommend")
+    @GetMapping ("recommend")
     public BaseResponse<Page<User>> recommendUsers(long pageSize, long pageNum, HttpServletRequest request){
        User logininUser = userService.getLogininUser(request);
        String redisKey = String.format("xin:user:recommend:%s",logininUser.getId());
@@ -202,5 +200,12 @@ public class UserController {
        return ResultUtils.success(userPage);
    }
 
-
+    @GetMapping("/match")
+    public BaseResponse<List<User>> matchUsers(long num, HttpServletRequest request){
+       if(num <= 0 || num > 20){
+           throw new BusinessException(ErrorCode.PARAMS_ERROR);
+       }
+       User user = userService.getLogininUser(request);
+       return ResultUtils.success(userService.matchUsers(num, user));
+   }
 }

@@ -7,6 +7,7 @@ import com.xin.matchsystem.model.domain.request.TeamJoinRequest;
 import com.xin.matchsystem.model.domain.request.TeamUpdateRequest;
 import com.xin.matchsystem.model.dto.TeamQuery;
 import com.xin.matchsystem.model.vo.TeamUserVO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,4 +31,7 @@ public interface TeamService extends IService<Team> {
     boolean updateTeam(TeamUpdateRequest team, User loginUser);
 
     boolean joinTeam(TeamJoinRequest teamJoinRequest, User logininUser);
+
+    @Transactional(rollbackFor = Exception.class)
+    boolean deleteTeam(long id, User loginUser);
 }
